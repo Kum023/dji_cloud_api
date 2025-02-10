@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Situation awareness</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+.chat-container {
+
+max-width: 1000px;
+margin: 50px 50px;
+margin: auto;
+
+padding: 20px;
+
+background-color: #f8f9fa;
+
+border-radius: 10px;
+
+box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+}
+
+.chat-bubble {
+
+padding: 10px 15px;
+
+border-radius: 15px;
+
+margin-bottom: 10px;
+
+max-width: 75%;
+
+}
+
+.question {
+
+background-color: #007bff;
+
+color: white;
+
+align-self: flex-end;
+
+}
+
+.answer {
+
+background-color: #e9ecef;
+
+}
+
+pre {
+
+background-color: #343a40;
+
+color: #fff;
+
+padding: 10px;
+
+border-radius: 5px;
+
+
+}
+
+
+      /* Optional: Add custom styles here if needed */
+      .dropdown-menu .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-menu .dropdown-submenu .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-left: -1px;
+        }
+
+</style>
+
+</head>
+
+
+
+<body>
+     <div id="navbar-container"></div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>  <script>
+        fetch('navbar.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navbar-container').innerHTML = html;
+
+                // Now that the navbar is in the DOM AND jQuery is loaded, initialize Bootstrap JS
+                $(document).ready(function() {
+                    $('.dropdown-toggle').dropdown(); // Initialize dropdowns
+                    // ... any other Bootstrap JS initialization ...
+                });
+            });
+    </script>
+
+<div class="container chat-container">
+
+<h3 class="text-center">Map Elements</h3>
+
+
+<div class="d-flex flex-column">
+
+<!-- Question 1 --><div class="chat-bubble answer">
+    <div class="message-with-avatar">
+        <div class="avatar"></div>
+        <div class="answer-content">
+            <h5>DJI Cloud API Map Elements</h5>
+            <p>
+                The DJI Cloud API can provide data that can be used to display and interact with map elements in your application.  However, it's important to understand that the DJI Cloud API itself doesn't directly display a map.  It provides the *data* that you can then use with a mapping library (like Leaflet, Google Maps, or Mapbox) to render the map and its elements.
+            </p>
+
+            <h5>Key Data Points & Potential API Usage for Map Elements</h5>
+            <ul class="api-list">
+                <li>
+                    <code class="code-snippet">Drone Location</code>:  Essential for displaying the drone's position on the map.  This information can be obtained through the <code class="code-snippet">GET /drone/v1/location</code> (or similar) API endpoint.
+                </li>
+                <li>
+                    <code class="code-snippet">Waylines/Flight Paths</code>:  Waylines (pre-planned flight paths) can be visualized on the map.  You can retrieve wayline data using the Wayline Management APIs (e.g., <code class="code-snippet">GET /wayline/v1/waylines/{id}</code>).
+                </li>
+                <li>
+                    <code class="code-snippet">Points of Interest (POI)</code>:  If you have data about POIs (e.g., landmarks, restricted areas), you can display them as markers on the map.  You'll likely need a custom API endpoint or a way to upload/manage POI data.
+                </li>
+                <li>
+                    <code class="code-snippet">Geofences</code>:  Geofences (virtual boundaries) can be displayed on the map to indicate restricted or monitored areas.  Similar to POIs, you'll need a way to manage geofence data.
+                </li>
+                <li>
+                    <code class="code-snippet">Real-time Video Feed Location (if available)</code>:  If the DJI Cloud API provides location data associated with the real-time video feed, you could potentially display the camera's field of view on the map.
+                </li>
+            </ul>
+
+            <h5>Sample Code for Map Elements (Python - Illustrative)</h5>
+            <p>
+                The following Python example is *illustrative*.  The exact API endpoints and data structures will depend on the DJI Cloud API version you are using.  You will also need a separate JavaScript mapping library (like Leaflet) to display the map and its elements.
+            </p>
+            <pre><code>import requests
+import json
+
+# Replace these with your actual DJI Cloud API credentials
+API_KEY = 'YOUR_API_KEY'  # *** IMPORTANT: Replace with your actual key ***
+BASE_URL = 'https://api.dji.com'
+
+# 1. Get Drone Location (Illustrative)
+def get_drone_location(drone_id):
+    url = f"{BASE_URL}/drone/v1/location/{drone_id}"  # Replace with the correct endpoint
+    headers = {'Authorization': f'Bearer {API_KEY}'}
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error getting location: {e}")
+        return None
+
+# 2. Get Wayline Data (Illustrative)
+def get_wayline_data(wayline_id):
+    url = f"{BASE_URL}/wayline/v1/waylines/{wayline_id}"  # Replace with the correct endpoint
+    headers = {'Authorization': f'Bearer {API_KEY}'}
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error getting wayline: {e}")
+        return None
+
+
+
+# Example Usage (You would typically call these from your backend and then
+# send the data to your frontend JavaScript mapping code)
+if __name__ == "__main__":
+    drone_id = "your_drone_id"  # *** Replace with your drone ID ***
+    wayline_id = "your_wayline_id" # *** Replace with your wayline ID ***
+
+    location = get_drone_location(drone_id)
+    if location:
+        print("Drone Location:", location)
+        # ... (Send location data to your JavaScript mapping code) ...
+
+    wayline_data = get_wayline_data(wayline_id)
+    if wayline_data:
+        print("Wayline Data:", wayline_data)
+        # ... (Send wayline data to your JavaScript mapping code) ...
+
+</code></pre>
+
+            <div class="explanation">
+                <p><strong>Explanation</strong></p>
+                <p>
+                    The code examples are illustrative and demonstrate how to retrieve data points that are *relevant* to displaying map elements.  You'll need to adapt them to the actual DJI Cloud API endpoints and data structures.  The data retrieved from these functions would then be sent to your frontend JavaScript code, which would use a mapping library (like Leaflet, Google Maps, or Mapbox) to display the map and the elements (drone location, waylines, etc.).
+                </p>
+            </div>
+
+            <div class="explanation">
+                <p><strong>Additional Notes</strong></p>
+                <p>
+                    <br>  *   Displaying map elements requires a combination of backend API calls (to get the data) and frontend JavaScript code (to render the map).  The DJI Cloud API provides the data, but you'll need a mapping library on the frontend.
+                    <br>  *   The specific API endpoints and data structures will vary depending on the DJI Cloud API version and the capabilities of the connected drone.  Consult the official DJI Cloud API documentation for the most accurate and up-to-date information.  The documentation is your primary resource for accurate and up-to-date information.
+                    <br>  *   Remember to replace placeholders like `YOUR_API_KEY`, `your_drone_id`, and `your_wayline_id` with your actual credentials.
+                    <br>  *   Install the `requests` library if you haven't already: `pip install requests`
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
+
+
+
+
+
+
+

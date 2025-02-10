@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Situation awareness</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+.chat-container {
+
+max-width: 1000px;
+margin: 50px 50px;
+margin: auto;
+
+padding: 20px;
+
+background-color: #f8f9fa;
+
+border-radius: 10px;
+
+box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+}
+
+.chat-bubble {
+
+padding: 10px 15px;
+
+border-radius: 15px;
+
+margin-bottom: 10px;
+
+max-width: 75%;
+
+}
+
+.question {
+
+background-color: #007bff;
+
+color: white;
+
+align-self: flex-end;
+
+}
+
+.answer {
+
+background-color: #e9ecef;
+
+}
+
+pre {
+
+background-color: #343a40;
+
+color: #fff;
+
+padding: 10px;
+
+border-radius: 5px;
+
+
+}
+
+
+      /* Optional: Add custom styles here if needed */
+      .dropdown-menu .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-menu .dropdown-submenu .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-left: -1px;
+        }
+
+</style>
+
+</head>
+
+
+
+<body>
+     <div id="navbar-container"></div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>  <script>
+        fetch('navbar.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navbar-container').innerHTML = html;
+
+                // Now that the navbar is in the DOM AND jQuery is loaded, initialize Bootstrap JS
+                $(document).ready(function() {
+                    $('.dropdown-toggle').dropdown(); // Initialize dropdowns
+                    // ... any other Bootstrap JS initialization ...
+                });
+            });
+    </script>
+
+<div class="container chat-container">
+
+<h3 class="text-center">Obtain Log via JSBridge</h3>
+
+
+<div class="d-flex flex-column">
+
+<!-- Question 1 -->
+<div class="chat-bubble answer">
+    <div class="message-with-avatar">
+        <div class="avatar"></div>
+        <div class="answer-content">
+            <h5>DJI Cloud API Obtain Log via JSBridge</h5>
+            <p>
+                Obtaining logs via JSBridge involves communication between your web application (running in a browser or webview) and the DJI Pilot app (or a mobile app with the DJI SDK integrated).  JSBridge acts as a bridge, allowing JavaScript code in your web app to call native functions in the DJI Pilot app (or mobile app) to access logs.
+            </p>
+
+            <h5>Key Concepts and Steps</h5>
+            <ol>
+                <li><strong>JSBridge Setup:</strong> First, you need to ensure that the JSBridge is correctly initialized and available in your webview or browser environment.  This usually involves injecting a JavaScript object (often named `DJI`) into the global scope.  The DJI SDK documentation should provide the instructions for setting up JSBridge.</li>
+                <li><strong>Calling Native Function:</strong> Once JSBridge is set up, you can call a native function (provided by the DJI SDK) to request logs.  The specific function name and parameters will be defined in the DJI SDK documentation.  It might look something like `DJI.getLogs(logType, callback)`.</li>
+                <li><strong>Handling Callback:</strong> The native function will likely use a callback function to return the log data to your JavaScript code.  You'll need to define this callback function to receive and process the log information.</li>
+            </ol>
+
+            <h5>Sample Code for Obtaining Logs via JSBridge (JavaScript - Illustrative)</h5>
+            <p>
+                The following JavaScript example is *illustrative*.  The exact function names, parameters, and callback behavior will depend on the specific DJI SDK and JSBridge implementation you are using.  Consult the official DJI SDK documentation for the correct details.
+            </p>
+            <pre><code>// Assuming the DJI object is available via JSBridge
+// (Check the DJI SDK docs for how to initialize the JSBridge)
+
+function obtainLogs(logType) { // logType: e.g., 'flight_logs', 'system_logs'
+    if (typeof DJI !== 'undefined' && typeof DJI.getLogs === 'function') { // Check if DJI.getLogs is available
+        DJI.getLogs(logType, function(logData) { // Callback function
+            if (logData) {
+                console.log("Log Data:", logData);
+
+                // Process the log data (e.g., display it in the UI, send it to a server)
+                displayLogs(logData); // Example: A function to display logs
+
+            } else {
+                console.error("Error retrieving logs or no logs available.");
+            }
+        });
+    } else {
+        console.error("DJI object or DJI.getLogs function is not available. Check JSBridge setup.");
+    }
+}
+
+function displayLogs(logData) {
+    // Implement your logic to display the log data in the UI.
+    // Example: Add the log data to a pre element:
+    const logDisplay = document.getElementById('log-display'); // Replace 'log-display' with your element ID
+    if (logDisplay) {
+        logDisplay.textContent = logData; // Assuming logData is a string
+    }
+}
+
+// Example usage:
+obtainLogs('flight_logs'); // Get flight logs
+// obtainLogs('system_logs'); // Get system logs
+</code></pre>
+
+            <div class="explanation">
+                <p><strong>Explanation</strong></p>
+                <p>
+                    The JavaScript code checks if the `DJI` object (provided by JSBridge) and the `DJI.getLogs()` function are available.  It then calls this function with the desired log type (`logType`) and a callback function.  The callback function receives the log data (`logData`) and processes it (in this example, it's displayed using the `displayLogs()` function).
+                </p>
+            </div>
+
+            <div class="explanation">
+                <p><strong>Additional Notes</strong></p>
+                <p>
+                   <br> *   Obtaining logs via JSBridge requires close coordination between your web application and the native DJI Pilot app (or mobile app).  The specific JSBridge setup and the API for log retrieval are defined in the DJI SDK documentation.  Consult the official DJI SDK documentation for the most accurate and up-to-date information.  The documentation is your primary resource for accurate and up-to-date information.
+                    <br>*   The code provided here is a general illustration and might need adjustments based on the specific requirements of the DJI SDK.
+                    <br>*   The `logData` you receive might be in different formats (string, JSON, etc.).  Make sure to handle the format appropriately in your callback function.
+                   <br> *   You'll need to have a mechanism (e.g., a `pre` element or a text area) in your HTML to display the retrieved logs.  The provided `displayLogs()` function is a simple example.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
+
+
+
+
+
+
+

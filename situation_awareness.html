@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Situation awareness</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+.chat-container {
+
+max-width: 1000px;
+margin: 50px 50px;
+margin: auto;
+
+padding: 20px;
+
+background-color: #f8f9fa;
+
+border-radius: 10px;
+
+box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+}
+
+.chat-bubble {
+
+padding: 10px 15px;
+
+border-radius: 15px;
+
+margin-bottom: 10px;
+
+max-width: 75%;
+
+}
+
+.question {
+
+background-color: #007bff;
+
+color: white;
+
+align-self: flex-end;
+
+}
+
+.answer {
+
+background-color: #e9ecef;
+
+}
+
+pre {
+
+background-color: #343a40;
+
+color: #fff;
+
+padding: 10px;
+
+border-radius: 5px;
+
+
+}
+
+
+      /* Optional: Add custom styles here if needed */
+      .dropdown-menu .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-menu .dropdown-submenu .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-left: -1px;
+        }
+
+</style>
+
+</head>
+
+
+
+<body>
+     <div id="navbar-container"></div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>  <script>
+        fetch('navbar.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navbar-container').innerHTML = html;
+
+                // Now that the navbar is in the DOM AND jQuery is loaded, initialize Bootstrap JS
+                $(document).ready(function() {
+                    $('.dropdown-toggle').dropdown(); // Initialize dropdowns
+                    // ... any other Bootstrap JS initialization ...
+                });
+            });
+    </script>
+
+<div class="container chat-container">
+
+<h3 class="text-center">Situation Awareness</h3>
+
+
+<div class="d-flex flex-column">
+
+<!-- Question 1 -->
+<div class="chat-bubble answer">
+    <div class="message-with-avatar">
+        <div class="avatar"></div>
+        <div class="answer-content">
+            <h5>DJI Cloud API Situation Awareness</h5>
+            <p>
+                Situation awareness in the context of drone operations refers to the pilot's understanding of the drone's environment, including its position, altitude, surroundings, and potential hazards.  The DJI Cloud API can provide data that contributes to building this awareness.  However, it's important to note that the API itself doesn't directly provide "situation awareness" as a single feature.  It provides the *data* that can be used to *create* it.
+            </p>
+
+            <h5>Key Data Points & Potential API Usage for Situation Awareness</h5>
+            <ul class="api-list">
+                <li>
+                    <code class="code-snippet">Drone Location and Altitude</code>:  Essential for knowing where the drone is.  This information could be obtained through the <code class="code-snippet">GET /drone/v1/location</code> or similar API endpoints.  The specific API endpoint depends on the DJI Cloud API version and the data available.
+                </li>
+                <li>
+                    <code class="code-snippet">Real-time Video Feed</code>:  Provides visual context.  This is typically handled through separate streaming protocols (like RTMP or WebRTC) rather than direct API calls. The API might be used to initiate or manage the video stream.
+                </li>
+                <li>
+                    <code class="code-snippet">Nearby Obstacles/Airspace Restrictions</code>:  Crucial for safety.  DJI may offer APIs for retrieving airspace data or detecting obstacles (if the drone has obstacle avoidance sensors).  The availability and specifics of these APIs depend on the DJI Cloud API capabilities.
+                </li>
+                <li>
+                    <code class="code-snippet">Flight Plan Information</code>:  Provides context for the mission.  Wayline management APIs (like <code class="code-snippet">GET /wayline/v1/waylines/{id}</code>) can provide information about the planned flight path.
+                </li>
+                <li>
+                    <code class="code-snippet">Telemetry Data</code>:  Includes battery level, signal strength, etc.  This data is crucial for the pilot to understand the drone's status.  This is likely accessed through specific telemetry API endpoints.
+                </li>
+            </ul>
+
+            <h5>Sample Code for Situation Awareness Data (Python - Illustrative)</h5>
+            <p>
+                The following Python example is *illustrative*.  The exact API endpoints and data structures will depend on the DJI Cloud API version you are using.  Consult the official DJI Cloud API documentation for the correct details.
+            </p>
+            <pre><code>import requests
+import json
+
+# Replace these with your actual DJI Cloud API credentials
+API_KEY = 'YOUR_API_KEY'  # *** IMPORTANT: Replace with your actual key ***
+BASE_URL = 'https://api.dji.com'
+
+# 1. Get Drone Location and Altitude (Illustrative)
+def get_drone_location(drone_id):
+    url = f"{BASE_URL}/drone/v1/location/{drone_id}"  # Replace with the correct endpoint
+    headers = {'Authorization': f'Bearer {API_KEY}'}
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error getting location: {e}")
+        return None
+
+# 2. Get Telemetry Data (Illustrative)
+def get_telemetry_data(drone_id):
+    url = f"{BASE_URL}/drone/v1/telemetry/{drone_id}"  # Replace with the correct endpoint
+    headers = {'Authorization': f'Bearer {API_KEY}'}
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error getting telemetry: {e}")
+        return None
+
+
+
+# Example Usage
+if __name__ == "__main__":
+    drone_id = "your_drone_id"  # *** Replace with your drone ID ***
+
+    location = get_drone_location(drone_id)
+    if location:
+        print("Drone Location:", location)
+
+    telemetry = get_telemetry_data(drone_id)
+    if telemetry:
+        print("Telemetry Data:", telemetry)
+
+</code></pre>
+
+            <div class="explanation">
+                <p><strong>Explanation</strong></p>
+                <p>
+                    The code examples are illustrative and demonstrate how to retrieve data points that are *relevant* to situation awareness.  You'll need to adapt them to the actual DJI Cloud API endpoints and data structures.
+                </p>
+            </div>
+
+            <div class="explanation">
+                <p><strong>Additional Notes</strong></p>
+                <p>
+                  <br>  *   Situation awareness is a complex concept.  The DJI Cloud API provides data, but you'll likely need to process and integrate that data to create a meaningful representation of the situation for the pilot.  This might involve combining data from multiple API endpoints, using sensor data, and potentially incorporating map information or other external data sources.
+                  <br>   *   Real-time video streaming is a critical component of situation awareness, but it's usually handled through separate streaming protocols rather than direct API calls.
+                  <br>  *   The availability and specifics of the APIs mentioned here depend on the DJI Cloud API version and the capabilities of the connected drone.  Consult the official DJI Cloud API documentation for the most accurate and up-to-date information.  The documentation is your primary resource for accurate and up-to-date information.
+                  <br>  *   Remember to replace placeholders like `YOUR_API_KEY` and `your_drone_id` with your actual credentials.
+                  <br>  *   Install the `requests` library if you haven't already: `pip install requests`
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
+
+
+
+
+
+
+

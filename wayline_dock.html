@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Situation awareness</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+.chat-container {
+
+max-width: 1000px;
+margin: 50px 50px;
+margin: auto;
+
+padding: 20px;
+
+background-color: #f8f9fa;
+
+border-radius: 10px;
+
+box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+}
+
+.chat-bubble {
+
+padding: 10px 15px;
+
+border-radius: 15px;
+
+margin-bottom: 10px;
+
+max-width: 75%;
+
+}
+
+.question {
+
+background-color: #007bff;
+
+color: white;
+
+align-self: flex-end;
+
+}
+
+.answer {
+
+background-color: #e9ecef;
+
+}
+
+pre {
+
+background-color: #343a40;
+
+color: #fff;
+
+padding: 10px;
+
+border-radius: 5px;
+
+
+}
+
+
+      /* Optional: Add custom styles here if needed */
+      .dropdown-menu .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-menu .dropdown-submenu .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-left: -1px;
+        }
+
+</style>
+
+</head>
+
+
+
+<body>
+     <div id="navbar-container"></div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>  <script>
+        fetch('navbar.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navbar-container').innerHTML = html;
+
+                // Now that the navbar is in the DOM AND jQuery is loaded, initialize Bootstrap JS
+                $(document).ready(function() {
+                    $('.dropdown-toggle').dropdown(); // Initialize dropdowns
+                    // ... any other Bootstrap JS initialization ...
+                });
+            });
+    </script>
+
+<div class="container chat-container">
+
+<h3 class="text-center">Wayline Management (Dock Function Set)</h3>
+
+
+<div class="d-flex flex-column">
+
+<!-- Question 1 --><div class="chat-bubble answer">
+    <div class="message-with-avatar">
+        <div class="avatar"></div>
+        <div class="answer-content">
+            <h5>DJI Cloud API Wayline Management (Dock Function Set)</h5>
+            <p>
+                The Dock Function Set in the DJI Cloud API, specifically related to Wayline Management, focuses on managing waylines *associated with a specific DJI Dock*.  This is distinct from general wayline management, as these waylines are intended for drones operating from that dock.  The APIs are similar to general wayline management but are scoped to the dock.
+            </p>
+
+            <h5>Key APIs for Wayline Management (Dock Function Set)</h5>
+            <p>
+                These APIs are typically accessed by including the Dock ID in the API path.  The exact endpoints may vary.  Consult the DJI Cloud API documentation.
+            </p>
+            <ul class="api-list">
+                <li><code class="code-snippet">POST /dock/v1/docks/{dock_id}/waylines</code>: Creates a new wayline *for the specified dock*.</li>
+                <li><code class="code-snippet">GET /dock/v1/docks/{dock_id}/waylines</code>: Retrieves a list of waylines *for the specified dock*.</li>
+                <li><code class="code-snippet">GET /dock/v1/docks/{dock_id}/waylines/{wayline_id}</code>: Retrieves a specific wayline *for the specified dock*.</li>
+                <li><code class="code-snippet">PUT /dock/v1/docks/{dock_id}/waylines/{wayline_id}</code>: Updates a specific wayline *for the specified dock*.</li>
+                <li><code class="code-snippet">DELETE /dock/v1/docks/{dock_id}/waylines/{wayline_id}</code>: Deletes a specific wayline *for the specified dock*.</li>
+                <li><code class="code-snippet">POST /dock/v1/docks/{dock_id}/waylines/{wayline_id}/upload</code>: Uploads a wayline file *for the specified dock*.</li>
+                <li><code class="code-snippet">GET /dock/v1/docks/{dock_id}/waylines/{wayline_id}/download</code>: Downloads a wayline file *for the specified dock*.</li>
+            </ul>
+
+            <h5>Sample Code for Wayline Management (Dock Function Set - Python)</h5>
+            <p>
+                The following Python example is illustrative. The exact API endpoints, request/response formats, and required parameters might vary depending on the DJI Cloud API version.  Consult the official DJI Cloud API documentation for the most accurate and up-to-date information.  The key difference is the inclusion of the `dock_id` in the URL.
+            </p>
+            <pre><code>import requests
+import json
+
+# Replace these with your actual DJI Cloud API credentials
+API_KEY = 'YOUR_API_KEY'  # *** IMPORTANT: Replace with your actual key ***
+BASE_URL = 'https://api.dji.com'
+
+# Example: Create a Wayline for a specific dock
+def create_dock_wayline(dock_id, wayline_data):
+    url = f"{BASE_URL}/dock/v1/docks/{dock_id}/waylines"  # Include dock_id in the URL
+    headers = {
+        'Authorization': f'Bearer {API_KEY}',
+        'Content-Type': 'application/json'
+    }
+    try:
+        response = requests.post(url, headers=headers, json=wayline_data)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error creating dock wayline: {e}")
+        return None
+
+# Example: Get Waylines for a specific dock
+def get_dock_waylines(dock_id):
+    url = f"{BASE_URL}/dock/v1/docks/{dock_id}/waylines"  # Include dock_id in the URL
+    headers = {'Authorization': f'Bearer {API_KEY}'}
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error getting dock waylines: {e}")
+        return None
+
+# ... (Add functions for get specific wayline, update, delete, upload, download - remember to include dock_id in the URL)
+
+# Example Usage
+if __name__ == "__main__":
+    dock_id = "your_dock_id"  # *** Replace with the actual dock ID ***
+
+    # Example wayline data (replace with your actual data)
+    wayline_data = {
+        "name": "My Dock Wayline",
+        "description": "A test wayline for the dock",
+        # ... other wayline properties ...
+    }
+
+    new_wayline = create_dock_wayline(dock_id, wayline_data)
+    if new_wayline:
+        print("Dock Wayline created:", new_wayline)
+
+        dock_waylines = get_dock_waylines(dock_id)
+        if dock_waylines:
+            print("Dock Wayline list:", dock_waylines)
+
+            # ... (Add code to get, update, delete, etc. - remember to use dock_id)
+    else:
+        print("Failed to create dock wayline.")
+
+</code></pre>
+
+            <div class="explanation">
+                <p><strong>Explanation</strong></p>
+                <p>
+                    The Python code provides illustrative examples of how to create and retrieve waylines specifically associated with a DJI Dock using the DJI Cloud API. The key difference from general wayline management is the inclusion of the `dock_id` in the API URLs.  You'll need to adapt the code to the specific API version and data formats described in the official DJI Cloud API documentation.
+                </p>
+            </div>
+
+            <div class="explanation">
+                <p><strong>Additional Notes</strong></p>
+                <p>
+                    *   The specific API endpoints, request/response formats, and required parameters for Wayline Management (Dock Function Set) will vary depending on the DJI Cloud API version and the capabilities of the connected drone and dock.  Consult the official DJI Cloud API documentation for the most accurate and up-to-date information.  The documentation is your primary resource for accurate and up-to-date information.
+                    *   The code provided here is a general illustration and might need adjustments based on the specific requirements of the DJI API.
+                    *   Remember to replace placeholders like `YOUR_API_KEY` and `your_dock_id` with your actual credentials.
+                    *   Install the `requests` library if you haven't already: `pip install requests`
+                    *   Wayline management for docks might involve other related APIs for managing drone-dock interactions, charging schedules, and other dock-specific functionalities. Explore the DJI Cloud API documentation for a comprehensive view of the available functionalities.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
+
+
+
+
+
+
+

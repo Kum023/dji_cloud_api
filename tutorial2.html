@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Q&A Chat Template</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+.chat-container {
+
+max-width: 1000px;
+margin: 50px 50px;
+margin: auto;
+
+padding: 20px;
+
+background-color: #f8f9fa;
+
+border-radius: 10px;
+
+box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+}
+
+.chat-bubble {
+
+padding: 10px 15px;
+
+border-radius: 15px;
+
+margin-bottom: 10px;
+
+max-width: 75%;
+
+}
+
+.question {
+
+background-color: #007bff;
+
+color: white;
+
+align-self: flex-end;
+
+}
+
+.answer {
+
+background-color: #e9ecef;
+
+}
+
+pre {
+
+background-color: #343a40;
+
+color: #fff;
+
+padding: 10px;
+
+border-radius: 5px;
+
+
+}
+
+
+      /* Optional: Add custom styles here if needed */
+      .dropdown-menu .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-menu .dropdown-submenu .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-left: -1px;
+        }
+
+</style>
+
+</head>
+
+
+
+<body>
+    <div id="navbar-container"></div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>  <script>
+        fetch('navbar.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navbar-container').innerHTML = html;
+
+                // Now that the navbar is in the DOM AND jQuery is loaded, initialize Bootstrap JS
+                $(document).ready(function() {
+                    $('.dropdown-toggle').dropdown(); // Initialize dropdowns
+                    // ... any other Bootstrap JS initialization ...
+                });
+            });
+    </script>
+
+<div class="container chat-container">
+
+<h3 class="text-center">Wayline Management</h3>
+
+
+<div class="d-flex flex-column">
+
+<!-- Question 1 -->
+<div class="chat-bubble question align-self-end">For DJI Cloud API services, what are the APIs used for Wayline Management? Show some sample code.</div>
+<div class="chat-bubble answer">
+    <div class="message-with-avatar">
+        <div class="avatar"></div>
+        <div class="answer-content">
+            <h5>DJI Cloud API Wayline Management</h5>
+            <p>
+                DJI Cloud API provides several APIs for managing waylines, allowing drones to follow predefined flight paths. Below are some key APIs and sample code for their implementation.
+            </p>
+            <h5>Key APIs for Wayline Management</h5>
+            <ul class="api-list">
+                <li><code class="code-snippet">flighttask_prepare</code>: Prepares a wayline mission.</li>
+                <li><code class="code-snippet">flighttask_execute</code>: Starts the mission.</li>
+                <li><code class="code-snippet">flighttask_progress</code>: Monitors real-time progress.</li>
+                <li><code class="code-snippet">flighttask_undo</code>: Cancels an ongoing mission.</li>
+            </ul>
+            
+            <h5>Sample Code for Wayline Management (Python)</h5>
+            <pre><code>import requests
+import json
+
+API_KEY = 'YOUR_API_KEY'
+BASE_URL = 'https://api.dji.com'
+
+def prepare_flight_task():
+url = f"{BASE_URL}/wayline/v1/flighttask_prepare"
+headers = {'Authorization': f'Bearer {API_KEY}'}
+try:
+    response = requests.post(url, headers=headers)
+    response.raise_for_status()
+    return response.json()
+except requests.exceptions.RequestException as e:
+    print(f"Error: {e}")
+    return None
+
+if __name__ == "__main__":
+result = prepare_flight_task()
+if result:
+    print("Flight Task Prepared:", result)
+else:
+    print("Failed to prepare flight task.")
+</code></pre>
+            <p>For more details, refer to the <a href="https://developer.dji.com/doc/cloud-api-tutorial/en/feature-set/pilot-feature-set/pilot-wayline-management.html" target="_blank">DJI Cloud API Documentation</a>.</p>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chat-bubble question align-self-end">For DJI Cloud API services, what are the APIs used for Access to Cloud Server? Show some sample code.</div>
+<div class="chat-bubble answer">
+    <div class="message-with-avatar">
+        <div class="avatar"></div>
+        <div class="answer-content">
+            <h5>DJI Cloud API - Access to Cloud Server</h5>
+            <p>
+                DJI Cloud API provides APIs that allow access to cloud services for authentication, data retrieval, and command execution. Below are some key APIs for cloud access.
+            </p>
+            <h5>Key APIs for Access to Cloud Server</h5>
+            <ul class="api-list">
+                <li><code class="code-snippet">get_auth_token</code>: Retrieves authentication token for secure access.</li>
+                <li><code class="code-snippet">get_server_status</code>: Checks the health and status of the cloud server.</li>
+                <li><code class="code-snippet">send_command</code>: Sends operational commands to DJI cloud-connected devices.</li>
+            </ul>
+            
+            <h5>Sample Code for Access to Cloud Server (Python)</h5>
+            <pre><code>import requests
+import json
+
+API_KEY = 'YOUR_API_KEY'
+BASE_URL = 'https://api.dji.com'
+
+def get_auth_token():
+url = f"{BASE_URL}/cloud/v1/auth/token"
+headers = {'Authorization': f'Bearer {API_KEY}'}
+try:
+    response = requests.post(url, headers=headers)
+    response.raise_for_status()
+    return response.json()
+except requests.exceptions.RequestException as e:
+    print(f"Error: {e}")
+    return None
+
+def get_server_status():
+url = f"{BASE_URL}/cloud/v1/server/status"
+headers = {'Authorization': f'Bearer {API_KEY}'}
+try:
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+    return response.json()
+except requests.exceptions.RequestException as e:
+    print(f"Error: {e}")
+    return None
+
+def send_command(command):
+url = f"{BASE_URL}/cloud/v1/device/command"
+headers = {'Authorization': f'Bearer {API_KEY}', 'Content-Type': 'application/json'}
+data = json.dumps({"command": command})
+try:
+    response = requests.post(url, headers=headers, data=data)
+    response.raise_for_status()
+    return response.json()
+except requests.exceptions.RequestException as e:
+    print(f"Error: {e}")
+    return None
+
+if __name__ == "__main__":
+token = get_auth_token()
+if token:
+    print("Auth Token:", token)
+
+status = get_server_status()
+if status:
+    print("Server Status:", status)
+
+command_response = send_command("reboot")
+if command_response:
+    print("Command Response:", command_response)
+</code></pre>
+            <p>For more details, refer to the <a href="https://developer.dji.com/doc/cloud-api-tutorial/en/" target="_blank">DJI Cloud API Documentation</a>.</p>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chat-bubble question align-self-end">For DJI Cloud API services, what are the APIs used for Device Management of the DJI Dock? Show some sample code.</div>
+<div class="chat-bubble answer">
+    <div class="message-with-avatar">
+        <div class="avatar"></div>
+        <div class="answer-content">
+            <h5>DJI Cloud API - Device Management (DJI Dock)</h5>
+            <p>
+                DJI Cloud API provides APIs for managing DJI Dock devices, including checking status, updating firmware, and controlling operations remotely.
+            </p>
+            <h5>Key APIs for Device Management</h5>
+            <ul class="api-list">
+                <li><code class="code-snippet">get_device_status</code>: Retrieves real-time status of the DJI Dock.</li>
+                <li><code class="code-snippet">update_firmware</code>: Initiates firmware updates for the device.</li>
+                <li><code class="code-snippet">restart_device</code>: Restarts the DJI Dock remotely.</li>
+            </ul>
+            
+            <h5>Sample Code for Device Management (Python)</h5>
+            <pre><code>import requests
+import json
+
+API_KEY = 'YOUR_API_KEY'
+BASE_URL = 'https://api.dji.com'
+
+def get_device_status():
+url = f"{BASE_URL}/device/v1/status"
+headers = {'Authorization': f'Bearer {API_KEY}'}
+try:
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+    return response.json()
+except requests.exceptions.RequestException as e:
+    print(f"Error: {e}")
+    return None
+
+if __name__ == "__main__":
+status = get_device_status()
+if status:
+    print("Device Status:", status)
+</code></pre>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chat-bubble question align-self-end">For DJI Cloud API services, what are the steps for calling the APIs used for Live Streaming? What are the available APIs for live streaming? Show some sample code.</div>
+<div class="chat-bubble answer">
+    <div class="message-with-avatar">
+        <div class="avatar"></div>
+        <div class="answer-content">
+            <h5>DJI Cloud API Live Streaming</h5>
+            <p>
+                DJI Cloud API provides live streaming capabilities, allowing users to stream video footage from DJI drones and DJI Dock in real-time. Below are the steps for calling the APIs used for live streaming and the available APIs.
+            </p>
+
+            <h5>Steps for Calling Live Streaming APIs</h5>
+            <ol>
+                <li><strong>Authenticate:</strong> Obtain an access token using API credentials.</li>
+                <li><strong>Start Live Stream:</strong> Use the API to start a live stream from the device.</li>
+                <li><strong>Obtain Live Stream URL:</strong> Retrieve the RTMP or HLS URL for viewing.</li>
+                <li><strong>Manage Live Stream:</strong> Adjust settings or monitor the live stream.</li>
+                <li><strong>Stop Live Stream:</strong> End the stream when finished.</li>
+            </ol>
+
+            <h5>Available Live Streaming APIs</h5>
+            <ul>
+                <li><code class="code-snippet">Start Live Stream</code>: Initiates a live streaming session.</li>
+                <li><code class="code-snippet">Get Live Stream URL</code>: Retrieves the URL for viewing the stream.</li>
+                <li><code class="code-snippet">Get Live Stream Status</code>: Checks the status of the ongoing live stream.</li>
+                <li><code class="code-snippet">Stop Live Stream</code>: Ends the live streaming session.</li>
+            </ul>
+
+            <h5>Sample Code for Live Streaming (Python)</h5>
+            <p>Below is an example of how to initiate and manage a live stream using DJI Cloud API.</p>
+            <pre><code>import requests
+import json
+
+API_KEY = 'YOUR_API_KEY'  # Replace with your actual API key
+BASE_URL = 'https://api.dji.com'
+
+# 1. Start Live Stream
+def start_live_stream(device_sn):
+    url = f"{BASE_URL}/live/v1/start"
+    headers = {'Authorization': f'Bearer {API_KEY}', 'Content-Type': 'application/json'}
+    data = {'device_sn': device_sn}
+    try:
+        response = requests.post(url, headers=headers, json=data)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error starting live stream: {e}")
+        return None
+
+# 2. Get Live Stream URL
+def get_live_stream_url(device_sn):
+    url = f"{BASE_URL}/live/v1/url?device_sn={device_sn}"
+    headers = {'Authorization': f'Bearer {API_KEY}'}
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error retrieving live stream URL: {e}")
+        return None
+
+# 3. Stop Live Stream
+def stop_live_stream(device_sn):
+    url = f"{BASE_URL}/live/v1/stop"
+    headers = {'Authorization': f'Bearer {API_KEY}', 'Content-Type': 'application/json'}
+    data = {'device_sn': device_sn}
+    try:
+        response = requests.post(url, headers=headers, json=data)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error stopping live stream: {e}")
+        return None
+
+# Example Usage
+if __name__ == "__main__":
+    device_sn = "your_device_serial_number"  # Replace with your actual device SN
+    start_result = start_live_stream(device_sn)
+    if start_result:
+        print("Live Stream Started:", start_result)
+
+    stream_url = get_live_stream_url(device_sn)
+    if stream_url:
+        print("Live Stream URL:", stream_url)
+
+    stop_result = stop_live_stream(device_sn)
+    if stop_result:
+        print("Live Stream Stopped:", stop_result)
+</code></pre>
+
+            <div class="explanation">
+                <p><strong>Explanation</strong></p>
+                <p>
+                    <strong>Start Live Stream:</strong> This function starts the live stream from the specified device.
+                </p>
+                <p>
+                    <strong>Get Live Stream URL:</strong> This function retrieves the URL to view the live stream.
+                </p>
+                <p>
+                    <strong>Stop Live Stream:</strong> This function ends the live streaming session.
+                </p>
+            </div>
+
+            <div class="explanation">
+                <p><strong>Additional Notes</strong></p>
+                <p>
+                    <strong>RTMP & HLS Support:</strong> The DJI Cloud API supports RTMP and HLS streaming formats.
+                </p>
+                <p>
+                    <strong>Latency Considerations:</strong> Depending on network conditions, latency can vary.
+                </p>
+                <p>
+                    <strong>Security:</strong> Ensure API keys are securely stored and not hardcoded in public repositories.
+                </p>
+                <p>
+                    For more details, refer to the official DJI Cloud API documentation.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
