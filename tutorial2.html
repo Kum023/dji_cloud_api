@@ -8,7 +8,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Q&A Chat Template</title>
+<title>DJI Tutorial</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -113,57 +113,147 @@ border-radius: 5px;
 
 <div class="d-flex flex-column">
 
-<!-- Question 1 -->
-<div class="chat-bubble question align-self-end">For DJI Cloud API services, what are the APIs used for Wayline Management? Show some sample code.</div>
+
+<!-- Question 5 -->
 <div class="chat-bubble answer">
     <div class="message-with-avatar">
         <div class="avatar"></div>
         <div class="answer-content">
-            <h5>DJI Cloud API Wayline Management</h5>
+            <h5>DJI Cloud API Wayline Management - Pilot Function Set</h5>
             <p>
-                DJI Cloud API provides several APIs for managing waylines, allowing drones to follow predefined flight paths. Below are some key APIs and sample code for their implementation.
+                The DJI Cloud API provides a set of APIs for managing waylines specifically for the pilot function set. These APIs allow pilots to plan, execute, and monitor wayline missions efficiently.
             </p>
-            <h5>Key APIs for Wayline Management</h5>
-            <ul class="api-list">
-                <li><code class="code-snippet">flighttask_prepare</code>: Prepares a wayline mission.</li>
-                <li><code class="code-snippet">flighttask_execute</code>: Starts the mission.</li>
-                <li><code class="code-snippet">flighttask_progress</code>: Monitors real-time progress.</li>
-                <li><code class="code-snippet">flighttask_undo</code>: Cancels an ongoing mission.</li>
+
+            <h5>Key APIs for Wayline Management - Pilot Function Set</h5>
+            <ul>
+                <li><code class="code-snippet">Create Wayline Mission</code>: Defines a new wayline mission.</li>
+                <li><code class="code-snippet">Upload Wayline Mission</code>: Uploads the wayline mission to the DJI cloud.</li>
+                <li><code class="code-snippet">Start Wayline Mission</code>: Initiates a wayline mission.</li>
+                <li><code class="code-snippet">Get Wayline Mission Status</code>: Retrieves the current status of an ongoing mission.</li>
+                <li><code class="code-snippet">Stop Wayline Mission</code>: Stops a running mission.</li>
+                <li><code class="code-snippet">Delete Wayline Mission</code>: Deletes a specific wayline mission.</li>
             </ul>
-            
-            <h5>Sample Code for Wayline Management (Python)</h5>
+
+            <h5>Sample Code for Wayline Management - Pilot Function Set (Python)</h5>
+            <p>Below is an example of how to create and manage a wayline mission using DJI Cloud API.</p>
             <pre><code>import requests
 import json
 
-API_KEY = 'YOUR_API_KEY'
+API_KEY = 'YOUR_API_KEY'  # Replace with your actual API key
 BASE_URL = 'https://api.dji.com'
 
-def prepare_flight_task():
-url = f"{BASE_URL}/wayline/v1/flighttask_prepare"
-headers = {'Authorization': f'Bearer {API_KEY}'}
-try:
-    response = requests.post(url, headers=headers)
-    response.raise_for_status()
-    return response.json()
-except requests.exceptions.RequestException as e:
-    print(f"Error: {e}")
-    return None
+# 1. Create a Wayline Mission
+def create_wayline_mission(mission_name, waypoints):
+    url = f"{BASE_URL}/wayline/v1/missions/create"
+    headers = {'Authorization': f'Bearer {API_KEY}', 'Content-Type': 'application/json'}
+    data = {
+        'mission_name': mission_name,
+        'waypoints': waypoints
+    }
+    try:
+        response = requests.post(url, headers=headers, json=data)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error creating wayline mission: {e}")
+        return None
 
-if __name__ == "__main__":
-result = prepare_flight_task()
-if result:
-    print("Flight Task Prepared:", result)
-else:
-    print("Failed to prepare flight task.")
+# 2. Start a Wayline Mission
+def start_wayline_mission(mission_id):
+    url = f"{BASE_URL}/wayline/v1/missions/{mission_id}/start"
+    headers = {'Authorization': f'Bearer {API_KEY}'}
+    try:
+        response = requests.post(url, headers=headers)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error starting wayline mission: {e}")
+        return None
+
+# 3. Get Mission Status
+def get_wayline_status(mission_id):
+    url = f"{BASE_URL}/wayline/v1/missions/{mission_id}/status"
+    headers = {'Authorization': f'Bearer {API_KEY}'}
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error retrieving mission status: {e}")
+        return None
+
+# 4. Stop Wayline Mission
+def stop_wayline_mission(mission_id):
+    url = f"{BASE_URL}/wayline/v1/missions/{mission_id}/stop"
+    headers = {'Authorization': f'Bearer {API_KEY}'}
+    try:
+        response = requests.post(url, headers=headers)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error stopping wayline mission: {e}")
+        return None
+
+# Example Usage
+if name == "__main__":
+    mission_name = "Test Wayline Mission"
+    waypoints = [{"latitude": 22.5431, "longitude": 114.0579, "altitude": 50}]
+
+Kumara, [10/2/2025 3:55 PM]
+mission = create_wayline_mission(mission_name, waypoints)
+    if mission:
+        mission_id = mission.get("mission_id")
+        print("Mission Created:", mission)
+
+        start_result = start_wayline_mission(mission_id)
+        if start_result:
+            print("Mission Started:", start_result)
+
+        status = get_wayline_status(mission_id)
+        if status:
+            print("Mission Status:", status)
+
+        stop_result = stop_wayline_mission(mission_id)
+        if stop_result:
+            print("Mission Stopped:", stop_result)
 </code></pre>
-            <p>For more details, refer to the <a href="https://developer.dji.com/doc/cloud-api-tutorial/en/feature-set/pilot-feature-set/pilot-wayline-management.html" target="_blank">DJI Cloud API Documentation</a>.</p>
+
+            <div class="explanation">
+                <p><strong>Explanation</strong></p>
+                <p>
+                    <strong>Create Wayline Mission:</strong> Defines a mission with specific waypoints.
+                </p>
+                <p>
+                    <strong>Start Wayline Mission:</strong> Sends a command to begin the wayline mission.
+                </p>
+                <p>
+                    <strong>Get Mission Status:</strong> Fetches the current status of the mission.
+                </p>
+                <p>
+                    <strong>Stop Wayline Mission:</strong> Terminates the ongoing wayline mission.
+                </p>
+            </div>
+
+            <div class="explanation">
+                <p><strong>Additional Notes</strong></p>
+                <p>
+                    <strong>Waypoint Configuration:</strong> Ensure waypoints are correctly defined with latitude, longitude, and altitude.
+                </p>
+                <p>
+                    <strong>Mission Safety:</strong> Always check for airspace regulations before executing missions.
+                </p>
+                <p>
+                    <strong>Real-time Monitoring:</strong> Use the mission status API to track progress and make adjustments.
+                </p>
+                <p>
+                    For more details, refer to the official DJI Cloud API documentation.
+                </p>
+            </div>
         </div>
     </div>
 </div>
 
 
-
-<div class="chat-bubble question align-self-end">For DJI Cloud API services, what are the APIs used for Access to Cloud Server? Show some sample code.</div>
 <div class="chat-bubble answer">
     <div class="message-with-avatar">
         <div class="avatar"></div>
@@ -239,8 +329,6 @@ if command_response:
 </div>
 
 
-
-<div class="chat-bubble question align-self-end">For DJI Cloud API services, what are the APIs used for Device Management of the DJI Dock? Show some sample code.</div>
 <div class="chat-bubble answer">
     <div class="message-with-avatar">
         <div class="avatar"></div>
@@ -284,8 +372,6 @@ if status:
 </div>
 
 
-
-<div class="chat-bubble question align-self-end">For DJI Cloud API services, what are the steps for calling the APIs used for Live Streaming? What are the available APIs for live streaming? Show some sample code.</div>
 <div class="chat-bubble answer">
     <div class="message-with-avatar">
         <div class="avatar"></div>
